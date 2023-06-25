@@ -13,6 +13,7 @@
   <div style="margin-bottom: 10px;">
     <button id="start-over-btn">Start Over</button>
     <button id="new-game-btn">New game</button>
+    <input type="text" id="password-text-field" placeholder="password" style="position: absolute; right: 0">
   </div>
   <div id="game-id-field">
     <input type="text" id="game-id-text-field" placeholder="game id">
@@ -33,17 +34,18 @@
     <label for="display-code">Display code</label>
   </div>
 
-  <div>
+  <div style="margin-top: 50px; position: absolute; bottom: 0;">
     <h2> Hotkeys </h2>
-    <p>n - new game</p>
-    <p>s - clear history</p>
-    <p>h - guess based on hints</p>
-    <p>r - guess alternate word forms</p>
-    <p>a - toggle whether seed is active</p>
-    <p>d - delete question under cursor</p>
-    <p>e - change answer under cursor</p>
-    <p>g - focus goal word box</p>
-    <p>l - focus leaderboard name box</p>
+    <h3> Alt plus: </h3>
+    <p> <strong> n </strong> - new line</p>
+    <p> <strong> t </strong> - tab</p>
+    <p> <strong> d </strong> - backspace</p>
+    <p> <strong> s </strong> - toggle display of code</p>
+    <p> <strong> p </strong> - focus password input </p>
+    <p> <strong> g </strong> - focus game id input </p>
+    <h3> Ctrl plus alt plus: </h3> 
+    <p> <strong> Enter </strong> - new game</p>
+    <p> <strong> c </strong> - start over</p>
   </div>
 
   <script src="script.js"></script>

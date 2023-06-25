@@ -70,6 +70,7 @@ function loadGame() {
             f = data['function'];
         })
 
+    console.log(f);
     if (f === '') {
         newGame();
     }
@@ -126,6 +127,8 @@ const gameIdInput = document.getElementById('game-id-text-field');
 
 const characterInput = document.getElementById('character-text-field');
 
+const passwordInput = document.getElementById('password-text-field');
+
 let gameId = '';
 
 gameIdInput.addEventListener('keydown', async (e) => {
@@ -145,6 +148,12 @@ characterInput.addEventListener('keydown', async (e) => {
     }
     if (e.key === 'Escape') {
         characterInput.blur();
+    }
+})
+
+passwordInput.addEventListener('keydown', async (e) => {
+    if (e.key === 'Escape') {  
+        passwordInput.blur();
     }
 })
 
@@ -192,6 +201,12 @@ document.addEventListener('keydown', async (e) => {
     if (e.key === 's') {
         displayCode.checked = !displayCode.checked;
     }
+    if (e.key === 'p') {
+        passwordInput.focus();
+    }
+    if (e.key === 'g') {
+        gameIdInput.focus();
+    }
     if (!e.ctrlKey) {
         return
     }
@@ -207,5 +222,3 @@ document.addEventListener('keydown', async (e) => {
 
 setInterval(getCurrent, 1000)
 setInterval(setGameState, 1000)
-
-showToast('Press Alt + S to toggle code visibility');
