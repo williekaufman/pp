@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS, cross_origin
 from settings import LOCAL, PASSWORD
-from functions import functions, test_exn
+from functions import functions, test_exn, FunctionType
 from redis_utils import rget, rset 
 from secrets import compare_digest
 import random
@@ -17,13 +17,16 @@ CORS(app)
 @cross_origin()
 def new_game():
     game_id = request.json.get('gameId')
-    f = random.choice(list(functions.keys()))
+    function_type = FunctionType(request.json.get('functionType') or 'easy')
+    f = random.choice(list(functions[function_type].keys()))
     if game_id is None:
         return 'Must provide gameId', 400
     rset('current', '', game_id=game_id)
     rset('function', f, game_id=game_id)
-    print(f'New game: {game_id} with function {f}')
-    return {'function': functions[f][0]}
+    rset('function_type', function_type.value, game_id=game_id)
+    add_character_inner(game_id, '\n')
+    add_character_inner(game_id, '\t')
+    return {'function': functions[function_type][f][0]}
 
 @app.route("/submit", methods=['POST'])
 @cross_origin()
@@ -64,9 +67,10 @@ def get_current():
     game_id = request.json.get('gameId')
     current = rget('current', game_id=game_id)
     function = rget('function', game_id=game_id)
+    function_type = FunctionType(rget('function_type', game_id=game_id) or 'easy')
     if current is None:
         return {'exists': False}
-    return {'exists': True, 'current': current, 'function': functions[function][0]} 
+    return {'exists': True, 'current': current, 'function': functions[function_type][function][0]} 
 
 @app.route("/add", methods=['POST'])
 @cross_origin()

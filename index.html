@@ -9,11 +9,15 @@
 </head>
 
 <body>
-  <!-- <div id="function"></div> -->
-  <div style="margin-bottom: 10px;">
-    <button id="start-over-btn">Start Over</button>
-    <button id="new-game-btn">New game</button>
-    <input type="password" id="password-text-field" style="position: absolute; right: 0">
+  <div class="container" style="margin-bottom: 10px;">
+    <button id="start-over-btn" style="margin-right: 5px">Start Over</button>
+    <button id="new-game-btn" style="margin-right: 5px">New game</button>
+    <select id="function-type"> 
+      <option value="easy"> easy </option>
+      <option value="medium"> medium </option>
+      <option value="hard"> hard </option>
+    </select>
+    <input placeholder="password" type="password" id="password-text-field" style="position: absolute; right: 0">
   </div>
   <div id="game-id-field">
     <input type="text" id="game-id-text-field" placeholder="game id">

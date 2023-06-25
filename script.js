@@ -6,7 +6,11 @@ let current = '';
 
 let addPipe = true;
 
+let won = false;
+
 const displayCode = document.getElementById('display-code');
+
+const functionType = document.getElementById('function-type');
 
 function showToast(message) {
   const toast = document.createElement('div');
@@ -68,8 +72,10 @@ function submit() {
         .then(response => response.json())
         .then(data => {
             if (data['won'] === true) {
-                showToast('you won!');
+                won = true;
+                showToast('you win!');
             } else {
+                won = false;
                 showToast(`${data['message']}`);
             }
         })
@@ -89,6 +95,11 @@ function getCurrent() {
     }
 
 function loadGame() {
+    if (gameId === '') {
+        showToast('enter a game id');
+        return;
+    }
+
     const requestOptions = makeRequestOptions(JSON.stringify({ gameId }));
 
     fetch(`${URL}/current`, requestOptions)
@@ -96,30 +107,35 @@ function loadGame() {
         .then(data => {
             if (data['exists'] === false) {
                 f = ''
+                newGame();
             } else {
-            f = data['function'];
+                f = data['function'];
             }
         })
-
-    if (f === '') {
-        console.log('new game');
-        newGame();
-    }
 }
 
 function newGame() {
-    const requestOptions = makeRequestOptions(JSON.stringify({ gameId }));
+    if (gameId === '') {
+        showToast('enter a game id');
+        return;
+    }
+
+    const requestOptions = makeRequestOptions(JSON.stringify({ gameId , functionType: functionType.value }));
 
     fetch(`${URL}/new_game`, requestOptions)
         .then(response => response.json())
         .then(data => {
             f = data['function'];
         })
+
+    showToast('new game');
 }
 
 function clear() {
     const requestOptions = makeRequestOptions(JSON.stringify({ gameId }));
     fetch(`${URL}/clear`, requestOptions)
+
+    showToast('cleared');
 }
 
 function addWhitespace(isTab) {
@@ -147,6 +163,11 @@ function setGameState() {
         gameState.innerHTML = f + (current || '');
     } else {
         gameState.innerHTML = f + hideCharacters(current || '');
+    }
+    if (won) {
+        gameState.style.color = 'green';
+    } else {
+        gameState.style.color = 'black';
     }
     gameState.innerHTML += addPipe ? '|' : '';
     addPipe = !addPipe; 
@@ -223,49 +244,53 @@ addCharacterButton.addEventListener('click', async () => {
 });
 
 document.addEventListener('keydown', async (e) => {
-    if (!e.altKey) {
-        return
+    if (e.altKey && !e.ctrlKey) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            await submit();
+        }
+        if (e.key === 'c') {
+            e.preventDefault();
+            await clear();
+        }
+        if (e.key === 'n') {
+            e.preventDefault();
+            await addWhitespace(false);
+        }
+        if (e.key === 't') {
+            e.preventDefault();
+            await addWhitespace(true);
+        }
+        if (e.key === 'd') {
+            e.preventDefault();
+            await backspace();
+        }
+        if (e.key === 's') {
+            displayCode.checked = !displayCode.checked;
+        }
+        if (e.key === 'p') {
+            passwordInput.focus();
+        }
+        if (e.key === 'g') {
+            gameIdInput.focus();
+        }
+        if (e.key === 'a') {
+            characterInput.focus();
+        }
     }
-    if (e.key === 'n') {
-        e.preventDefault();
-        await addWhitespace(false);
-    }
-    if (e.key === 't') {
-        e.preventDefault();
-        await addWhitespace(true);
-    }
-    if (e.key === 'd') {
-        e.preventDefault();
-        await backspace();
-    }
-    if (e.key === 's') {
-        displayCode.checked = !displayCode.checked;
-    }
-    if (e.key === 'p') {
-        passwordInput.focus();
-    }
-    if (e.key === 'g') {
-        gameIdInput.focus();
-    }
-    if (e.key === 'a') {
-        characterInput.focus();
-    }
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        await submit();
-    }
-    if (!e.ctrlKey) {
-        return
-    }
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        await newGame();
-    }
-    if (e.key === 'c') {
-        e.preventDefault();
-        await clear();
+    if (e.altKey && e.ctrlKey) {
+        if (e.key === 'n') {
+            e.preventDefault();
+            await newGame();
+        }
+        if (e.key === 'c') {
+            e.preventDefault();
+            await clear();
+        }
     }
 })
 
-setInterval(getCurrent, 1000)
-setInterval(setGameState, 1000)
+setInterval(function () {
+    getCurrent();
+    setGameState();
+}, 500)
