@@ -160,6 +160,8 @@ const characterInput = document.getElementById('character-text-field');
 
 const passwordInput = document.getElementById('password-text-field');
 
+passwordInput.value = localStorage.getItem('pairProgrammingPassword') || '';
+
 let gameId = '';
 
 gameIdInput.addEventListener('keydown', async (e) => {
@@ -182,6 +184,9 @@ characterInput.addEventListener('keydown', async (e) => {
 })
 
 passwordInput.addEventListener('keydown', async (e) => {
+    if (e.key === 'Enter') {
+        localStorage.setItem('pairProgrammingPassword', passwordInput.value);
+    }
     if (e.key === 'Escape') {  
         passwordInput.blur();
     }
