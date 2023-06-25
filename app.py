@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS, cross_origin
 from settings import LOCAL, PASSWORD
-from functions import functions, test
+from functions import functions, test_exn
 from redis_utils import rget, rset 
 from secrets import compare_digest
 import random
@@ -25,21 +25,22 @@ def new_game():
     print(f'New game: {game_id} with function {f}')
     return {'function': functions[f][0]}
 
-@app.route("/end_game", methods=['POST'])
+@app.route("/submit", methods=['POST'])
 @cross_origin()
 def end_game():
     if not compare_digest(request.json.get('password'), PASSWORD):
-        return 'Incorrect password', 400
+        return {'won': False, 'message': 'Incorrect password'}
     game_id = request.json.get('gameId')
     if game_id is None:
-        return 'Must provide gameId', 400
+        return {'won': False, 'message': 'Must provide gameId'}
     rget('function', game_id=game_id)
     if rget('function', game_id=game_id) is None:
-        return 'Game does not exist', 400
+        return {'won': False, 'message': 'Game does not exist'}
     try:
-        return str(test(rget('function', game_id=game_id), rget('current', game_id=game_id)))
-    except:
-        return 'Failed evaluation'
+        test_exn(rget('function', game_id=game_id), rget('current', game_id=game_id))
+        return {'won': True}
+    except Exception as e:
+        return {'won': False, 'message': str(e)}
 
 @app.route("/clear", methods=['POST'])
 @cross_origin()

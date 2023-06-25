@@ -33,6 +33,10 @@ function hideCharacters(string) {
     }
   }
 
+  if (result.length > 0) {
+    result = result.slice(0, -1) + string[string.length - 1];
+  }
+
   return result;
 }
 
@@ -46,9 +50,29 @@ function makeRequestOptions(body) {
 }
 
 function addCharacter() {
+    if (!localStorage.getItem('allowMultipleCharacters') && characterInput.value.length != 1) {
+        showToast('must add exactly one character');
+        return
+    }
     const requestOptions = makeRequestOptions(JSON.stringify({ gameId, character: characterInput.value }));
 
     fetch(`${URL}/add`, requestOptions)
+    
+    characterInput.value = '';
+}
+
+function submit() {
+    const requestOptions = makeRequestOptions(JSON.stringify({ gameId, password: passwordInput.value }));
+
+    fetch(`${URL}/submit`, requestOptions)
+        .then(response => response.json())
+        .then(data => {
+            if (data['won'] === true) {
+                showToast('you won!');
+            } else {
+                showToast(`${data['message']}`);
+            }
+        })
 }
 
 function getCurrent() {
@@ -57,6 +81,9 @@ function getCurrent() {
     fetch(`${URL}/current`, requestOptions)
         .then(response => response.json())
         .then(data => {
+            if (data['exists'] === false) {
+                current = ''
+            }
             current = data['current'];
         })
     }
@@ -67,11 +94,15 @@ function loadGame() {
     fetch(`${URL}/current`, requestOptions)
         .then(response => response.json())
         .then(data => {
+            if (data['exists'] === false) {
+                f = ''
+            } else {
             f = data['function'];
+            }
         })
 
-    console.log(f);
     if (f === '') {
+        console.log('new game');
         newGame();
     }
 }
@@ -144,7 +175,6 @@ gameIdInput.addEventListener('keydown', async (e) => {
 characterInput.addEventListener('keydown', async (e) => {
     if (e.key === 'Enter') {
         await addCharacter();
-        characterInput.value = '';
     }
     if (e.key === 'Escape') {
         characterInput.blur();
@@ -182,6 +212,11 @@ deleteButton.addEventListener('click', async () => {
     await backspace();
 });
 
+const addCharacterButton = document.getElementById('add-character-btn');
+addCharacterButton.addEventListener('click', async () => {
+    await addCharacter();
+});
+
 document.addEventListener('keydown', async (e) => {
     if (!e.altKey) {
         return
@@ -206,6 +241,13 @@ document.addEventListener('keydown', async (e) => {
     }
     if (e.key === 'g') {
         gameIdInput.focus();
+    }
+    if (e.key === 'a') {
+        characterInput.focus();
+    }
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        await submit();
     }
     if (!e.ctrlKey) {
         return
