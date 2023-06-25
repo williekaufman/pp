@@ -1,0 +1,101 @@
+from flask import Flask, jsonify, request, make_response
+from flask_cors import CORS, cross_origin
+from settings import LOCAL, PASSWORD
+from functions import functions, test
+from redis_utils import rget, rset 
+from secrets import compare_digest
+import random
+import requests
+import json
+
+from enum import Enum
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route("/new_game", methods=['POST'])
+@cross_origin()
+def new_game():
+    game_id = request.json.get('gameId')
+    f = random.choice(list(functions.keys()))
+    if game_id is None:
+        return 'Must provide gameId', 400
+    rset('current', '', game_id=game_id)
+    rset('function', f, game_id=game_id)
+    print(f'New game: {game_id} with function {f}')
+    return {'function': functions[f][0]}
+
+@app.route("/end_game", methods=['POST'])
+@cross_origin()
+def end_game():
+    if not compare_digest(request.json.get('password'), PASSWORD):
+        return 'Incorrect password', 400
+    game_id = request.json.get('gameId')
+    if game_id is None:
+        return 'Must provide gameId', 400
+    rget('function', game_id=game_id)
+    if rget('function', game_id=game_id) is None:
+        return 'Game does not exist', 400
+    try:
+        return str(test(rget('function', game_id=game_id), rget('current', game_id=game_id)))
+    except:
+        return 'Failed evaluation'
+
+@app.route("/clear", methods=['POST'])
+@cross_origin()
+def clear():
+    game_id = request.json.get('gameId')
+    if game_id is None:
+        return 'Must provide gameId', 400
+    rset('current', '', game_id=game_id)
+    return {'cleared': True}
+
+def add_character_inner(game_id, character):
+    current = rget('current', game_id=game_id) 
+    if current is None:
+        return {'exists': False }
+    rset('current', current + character, game_id=game_id)
+    return {'exists': True, 'current': current + character}
+
+@app.route("/current", methods=['POST'])
+@cross_origin()
+def get_current():
+    game_id = request.json.get('gameId')
+    current = rget('current', game_id=game_id)
+    function = rget('function', game_id=game_id)
+    if current is None:
+        return {'exists': False}
+    return {'exists': True, 'current': current, 'function': functions[function][0]} 
+
+@app.route("/add", methods=['POST'])
+@cross_origin()
+def add():
+    game_id = request.json.get('gameId')
+    character = request.json.get('character')
+    if character is None or game_id is None:
+        return 'Must provide character and gameId', 400
+    return add_character_inner(game_id, character)
+
+@app.route("/add/newline", methods=['POST'])
+@cross_origin()
+def add_newline():
+    game_id = request.json.get('gameId')
+    return add_character_inner(game_id, '\n')
+
+@app.route("/add/tab", methods=['POST'])
+@cross_origin()
+def add_tab():
+    game_id = request.json.get('gameId')
+    return add_character_inner(game_id, '\t')
+
+@app.route("/delete", methods=['POST'])
+@cross_origin()
+def delete_character():
+    game_id = request.json.get('gameId')
+    current = rget('current', game_id=game_id) or ''
+    rset('current', current[:-1], game_id=game_id)
+    return current[:-1]
+
+if __name__ == '__main__':
+    print('app running!')
+    app.run(host='0.0.0.0', port=5001 if LOCAL else 5000)

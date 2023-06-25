@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pair Programming</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <!-- <div id="function"></div> -->
+  <div style="margin-bottom: 10px;">
+    <button id="start-over-btn">Start Over</button>
+    <button id="new-game-btn">New game</button>
+  </div>
+  <div id="game-id-field">
+    <input type="text" id="game-id-text-field" placeholder="game id">
+  </div>
+  <div>
+    <button style="margin-top: 50px; margin-bottom: 10px;" id="new-line-btn">New line</button>
+    <button id="tab-btn">Tab</button>
+    <button id="delete-btn">Backspace</button>
+  </div>
+  <div style="margin-bottom: 10px;" id="add-character">
+    <input type="text" id="character-text-field" placeholder="">
+    <button id="add-character-btn">Add character</button>
+  </div>
+  <div class="textarea-container">
+    <textarea id="game-state" cols="80" rows="20" readonly="true"></textarea>
+  </div>
+  <div> <input type="checkbox" id="display-code">
+    <label for="display-code">Display code</label>
+  </div>
+
+  <div>
+    <h2> Hotkeys </h2>
+    <p>n - new game</p>
+    <p>s - clear history</p>
+    <p>h - guess based on hints</p>
+    <p>r - guess alternate word forms</p>
+    <p>a - toggle whether seed is active</p>
+    <p>d - delete question under cursor</p>
+    <p>e - change answer under cursor</p>
+    <p>g - focus goal word box</p>
+    <p>l - focus leaderboard name box</p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

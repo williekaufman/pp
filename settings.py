@@ -1,0 +1,2 @@
+LOCAL=True
+PASSWORD="adam"
