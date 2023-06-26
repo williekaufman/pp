@@ -1,2 +1,0 @@
-LOCAL=True
-PASSWORD="adam"
