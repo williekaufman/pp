@@ -68,14 +68,6 @@ def evaluate_ocaml_code(code):
     else:
         raise Exception('Failed to build', result.stderr)
 
-def helper(x):
-    if not isinstance(x, list):
-        return x
-    return re.sub(r'\b(\w+)\b', r'\1;', str(x)).replace(',', '') 
-
-def change_list_delimiters(args):
-    return [helper(arg) for arg in args]
-
 def wrap_negatives_in_parens(args):
     ret = []
     for arg in args:
