@@ -115,6 +115,7 @@ function loadGame() {
     won = false;
 
     if (gameId === '') {
+        f = '';
         showToast('enter a game id');
         return;
     }

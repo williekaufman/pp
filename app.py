@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, make_response, render_template
 from flask_cors import CORS, cross_origin
 from settings import LOCAL, PASSWORD
 from functions import functions, FunctionType
@@ -14,6 +14,10 @@ from enum import Enum
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route("/", methods=['GET'])
+def index():
+    return render_template('index.html')
 
 @app.route("/new_game", methods=['POST'])
 @cross_origin()
@@ -121,4 +125,4 @@ def delete_character():
 
 if __name__ == '__main__':
     print('app running!')
-    app.run(host='0.0.0.0', port=5001 if LOCAL else 5000)
+    app.run(host='0.0.0.0', port=5001 if LOCAL else 5002)
