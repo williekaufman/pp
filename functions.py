@@ -8,6 +8,7 @@ class FunctionType(Enum):
 easy_functions = {
     'square': ('def square(x: float) -> float:', [(0, 0), (2, 4), (-3, 9)]), 
     'add_two': ('def add_two(x: float) -> float:', [(0, 2), (2, 4), (-3, -1)]),
+    'is_even': ('def is_even(x: int) -> bool:', [(0, True), (1, False), (2, True), (3, False), (5, False), (10, True), (17, False), (123, False), (1171, False)]),
 }
 
 medium_functions = {
@@ -18,6 +19,7 @@ medium_functions = {
 hard_functions = {
     'is_palindrome': ('def is_palindrome(x: str) -> bool:', [('racecar', True), ('hello', False), ('', True)]),
     'is_prime': ('def is_prime(x: int) -> bool:', [(0, False), (1, False), (2, True), (3, True), (5, True), (10, False), (17, True), (123, False), (1171, True)]),
+    'is_anagram': ('def is_anagram(x: str, y: str) -> bool:', [('racecar', 'carrace', True), ('hello', 'world', False), ('', '', True)]),
 }
 
 functions = {
@@ -36,10 +38,13 @@ def test_exn(function, additional_code):
         raise Exception(f'Function {function} not found')
     code = spec[0] + additional_code
     exec(code)
-    for x, y in spec[1]:
+    for test_case in spec[1]:
+        args = test_case[:-1]
+        expected = test_case[-1]
+        repr_args = ', '.join([repr(arg) for arg in args])
         try:
-            value = eval(f'{function}({x})')
-        except:
-            raise Exception(f'Failed to evaluate f({x})')
-        if value != y:
-            raise Exception(f'Expected f({x}) = {y} but got {value}')
+            value = eval(f'{function}(*{args})')
+        except Exception as e:
+            raise Exception(f'Failed to evaluate f({repr_args}) with error {e}')
+        if value != expected:
+            raise Exception(f'Expected f({repr_args}) = {expected} but got {value}')

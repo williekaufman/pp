@@ -10,20 +10,22 @@
 
 <body>
   <div class="container" style="margin-bottom: 10px;">
-    <button id="start-over-btn" style="margin-right: 5px">Start Over</button>
-    <button id="new-game-btn" style="margin-right: 5px">New game</button>
-    <select id="function-type"> 
+    <button id="load-game-btn" style="margin-right: 5px">Load game</button>
+    <select id="function-type">
       <option value="easy"> easy </option>
       <option value="medium"> medium </option>
       <option value="hard"> hard </option>
     </select>
+    <label for="function-type" style="margin-left: 10px">New game difficulty</label>
     <input placeholder="password" type="password" id="password-text-field" style="position: absolute; right: 0">
   </div>
   <div id="game-id-field">
     <input type="text" id="game-id-text-field" placeholder="game id">
   </div>
   <div>
-    <button style="margin-top: 50px; margin-bottom: 10px;" id="new-line-btn">New line</button>
+    <button id="start-over-btn" style="margin-top: 50px; margin-bottom: 10px;">Clear all code</button>
+  </div>
+  <div> <button style="margin-bottom: 10px;" id="new-line-btn">New line</button>
     <button id="tab-btn">Tab</button>
     <button id="delete-btn">Backspace</button>
   </div>
@@ -34,8 +36,11 @@
   <div class="textarea-container">
     <textarea id="game-state" cols="80" rows="20" readonly="true"></textarea>
   </div>
-  <div> <input type="checkbox" id="display-code">
+  <div> <input type="checkbox" id="display-code" style="margin-bottom: 10px">
     <label for="display-code">Display code</label>
+  </div>
+  <div> <input type="checkbox" id="allow-multiple-characters">
+    <label for="allow-multiple-characters">Allow adding multiple characters at once</label>
   </div>
 
   <div style="margin-top: 50px; position: absolute; bottom: 0;">
@@ -45,11 +50,12 @@
     <p> <strong> t </strong> - tab</p>
     <p> <strong> d </strong> - backspace</p>
     <p> <strong> s </strong> - toggle display of code</p>
+    <p> <strong> m </strong> - toggle allowing multiple characters at once</p>
     <p> <strong> a </strong> - focus character input</p>
     <p> <strong> p </strong> - focus password input </p>
     <p> <strong> g </strong> - focus game id input </p>
-    <h3> Ctrl plus alt plus: </h3> 
-    <p> <strong> Enter </strong> - new game</p>
+    <h3> Ctrl plus alt plus: </h3>
+    <p> <strong> n </strong> - new game</p>
     <p> <strong> c </strong> - start over</p>
   </div>
 

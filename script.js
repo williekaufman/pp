@@ -12,6 +12,10 @@ const displayCode = document.getElementById('display-code');
 
 const functionType = document.getElementById('function-type');
 
+const allowMultipleCharacters = document.getElementById('allow-multiple-characters');
+
+allowMultipleCharacters.checked = !!localStorage.getItem('allowMultipleCharacters');
+
 function showToast(message, seconds = 3) {
   const toast = document.createElement('div');
 
@@ -54,7 +58,10 @@ function makeRequestOptions(body) {
 }
 
 function addCharacter() {
-    if (!localStorage.getItem('allowMultipleCharacters') && characterInput.value.length != 1) {
+    if (characterInput.value === '') {
+        return;
+    }
+    if (!allowMultipleCharacters.checked && characterInput.value.length > 1) {
         showToast('must add exactly one character');
         return
     }
@@ -111,6 +118,7 @@ function loadGame() {
                 f = ''
                 newGame();
             } else {
+                showToast('loaded game');
                 f = data['function'];
             }
         })
@@ -191,6 +199,25 @@ passwordInput.value = localStorage.getItem('pairProgrammingPassword') || '';
 
 let gameId = '';
 
+gameState.addEventListener('keydown', async (e) => {
+    if (e.key === 'Backspace') {
+        e.preventDefault();
+        await backspace();
+    }
+    if (e.key === 'Tab' && !e.shiftKey) {
+        e.preventDefault();
+        await addWhitespace(true);
+    }
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        await submit();
+    }
+    if (e.key === 'Escape') {
+        e.preventDefault();
+        gameState.blur();
+    }
+})
+
 gameIdInput.addEventListener('keydown', async (e) => {
     if (e.key === 'Enter') {
         gameId = gameIdInput.value;
@@ -219,9 +246,9 @@ passwordInput.addEventListener('keydown', async (e) => {
     }
 })
 
-const newGameButton = document.getElementById('new-game-btn');
-newGameButton.addEventListener('click', async () => {
-    await newGame();
+const loadGameButton = document.getElementById('load-game-btn');
+loadGameButton.addEventListener('click', async () => {
+    await loadGame();
 });
 
 const startOverButton = document.getElementById('start-over-btn');
@@ -273,6 +300,9 @@ document.addEventListener('keydown', async (e) => {
         }
         if (e.key === 's') {
             displayCode.checked = !displayCode.checked;
+        }
+        if (e.key === 'm') {
+            allowMultipleCharacters.checked = !allowMultipleCharacters.checked;
         }
         if (e.key === 'p') {
             passwordInput.focus();
