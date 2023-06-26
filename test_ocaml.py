@@ -17,7 +17,7 @@ print_function = {
     'square': ' |> Int.to_string |> print_endline',
     'add_two': ' |> Int.to_string |> print_endline',
     'is_even': ' |> Bool.to_string |> print_endline',
-    'most_common_element': ' |> Int.to_string |> print_endline',
+    'most_common_element': ' |> match x with None -> print_endline "None" | Some x -> Int.to_string x |> print_endline',
     'sum_list': ' |> Int.to_string |> print_endline',
     'is_palindrome': ' |> Bool.to_string |> print_endline',
     'is_prime': ' |> Bool.to_string |> print_endline',
@@ -35,9 +35,9 @@ back_to_expected_type = {
     'is_anagram': lambda x : x == 'true',
 }
 
-test_cases = {
+special_test_cases = {
     'sum_list': [('[1;2;3]', 6), ('[1;1;2;3]', 7), ('[1;2;3;3]', 9)],
-    'most_common_element': [('[1;2;3]', 'None'), ('[1;1;2;3]', 'Some 1'), ('[1;2;3;3]', 'Some 3')],
+    'most_common_element': [('[1;2;3]', 'None'), ('[1;1;2;3]', '1'), ('[1;2;3;3]', '3')],
 }
 
 filename_prefix = 'super_safe_filename'
@@ -83,7 +83,7 @@ def stringify(arg):
 
 def test_ocaml_exn(function, additional_code):
     function_spec = spec(function)
-    test_cases = test_cases[function] if function in test_cases else function_spec[1]
+    test_cases = special_test_cases[function] if function in special_test_cases else function_spec[1]
     code = ocaml_function_starts[function] + additional_code + print_function[function]
     for test_case in test_cases:
         args = test_case[:-1]
