@@ -328,13 +328,11 @@ function handleKeyDown(e) {
             e.preventDefault();
             characterInput.focus();
         }
-    }
-    if (e.ctrlKey && !e.altKey) {
         if (e.key === 'Enter') {
             e.preventDefault();
             addWhitespace(false);
         }
-        if (e.key === 'Tab') {
+        if (e.key === 't') {
             e.preventDefault();
             addWhitespace(true);
         }
