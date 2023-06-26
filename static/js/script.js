@@ -145,7 +145,7 @@ function newGame() {
         return;
     }
 
-    const requestOptions = makeRequestOptions(JSON.stringify({ gameId, functionType: functionType.value , language: language.value }));
+    const requestOptions = makeRequestOptions(JSON.stringify({ gameId, functionType: functionType.value , language: language.value , specificFunction: 'square'}));
 
     fetch(`${URL}/new_game`, requestOptions)
         .then(response => response.json())

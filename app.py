@@ -24,8 +24,9 @@ def index():
 def new_game():
     game_id = request.json.get('gameId')
     function_type = FunctionType(request.json.get('functionType') or 'easy')
+    specificFunction = request.json.get('specificFunction')
     ocaml = request.json.get('language') and request.json.get('language').lower() == 'ocaml'
-    f = random.choice(list(functions[function_type].keys()))
+    f = specificFunction or random.choice(list(functions[function_type].keys()))
     if game_id is None:
         return 'Must provide gameId', 400
     rset('current', '', game_id=game_id)
