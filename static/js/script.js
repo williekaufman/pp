@@ -20,6 +20,8 @@ allowMultipleCharacters.checked = !!localStorage.getItem('allowMultipleCharacter
 
 let previousToast = null;
 
+let inInputField = false;
+
 function showToast(message, seconds = 3) {
     const toast = document.createElement('div');
 
@@ -281,49 +283,51 @@ addCharacterButton.addEventListener('click', async () => {
 });
 
 passwordInput.addEventListener('focus', () => {
-    document.removeEventListener('keydown', handleKeyDown);
+    inInputField = true;
 })
 
 passwordInput.addEventListener('blur', () => {
-    document.addEventListener('keydown', handleKeyDown);
+    inInputField = false;
 })
 
 gameIdInput.addEventListener('focus', () => {
-    document.removeEventListener('keydown', handleKeyDown);
+    inInputField = true;
 })
 
 gameIdInput.addEventListener('blur', () => {
-    document.addEventListener('keydown', handleKeyDown);
+    inInputField = false;
 })
 
 characterInput.addEventListener('focus', () => {
-    document.removeEventListener('keydown', handleKeyDown);
+    inInputField = true;
 })
 
 characterInput.addEventListener('blur', () => {
-    document.addEventListener('keydown', handleKeyDown);
+    inInputField = false;
 })
 
 function handleKeyDown(e) {
-    if (e.key === 's') {
-        e.preventDefault();
-        displayCode.checked = !displayCode.checked;
-    }
-    if (e.key === 'm') {
-        e.preventDefault();
-        allowMultipleCharacters.checked = !allowMultipleCharacters.checked;
-    }
-    if (e.key === 'p') {
-        e.preventDefault();
-        passwordInput.focus();
-    }
-    if (e.key === 'g') {
-        e.preventDefault();
-        gameIdInput.focus();
-    }
-    if (e.key === 'a') {
-        e.preventDefault();
-        characterInput.focus();
+    if (!inInputField) {
+        if (e.key === 's') {
+            e.preventDefault();
+            displayCode.checked = !displayCode.checked;
+        }
+        if (e.key === 'm') {
+            e.preventDefault();
+            allowMultipleCharacters.checked = !allowMultipleCharacters.checked;
+        }
+        if (e.key === 'p') {
+            e.preventDefault();
+            passwordInput.focus();
+        }
+        if (e.key === 'g') {
+            e.preventDefault();
+            gameIdInput.focus();
+        }
+        if (e.key === 'a') {
+            e.preventDefault();
+            characterInput.focus();
+        }
     }
     if (e.ctrlKey && !e.altKey) {
         if (e.key === 'Enter') {
