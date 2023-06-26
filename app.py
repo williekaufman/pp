@@ -86,7 +86,7 @@ def get_current():
     current = rget('current', game_id=game_id)
     function = rget('function', game_id=game_id)
     function_type = FunctionType(rget('function_type', game_id=game_id) or 'easy')
-    if current is None:
+    if current is None or function is None:
         return {'exists': False}
     if ocaml:
         function = ocaml_function_starts_with_type_annotations[function]
