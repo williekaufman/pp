@@ -1,4 +1,4 @@
-URL = 'http://127.0.0.1:5002'
+URL = 'http://ec2-34-192-101-140.compute-1.amazonaws.com:5002'
 
 let f = ''
 
