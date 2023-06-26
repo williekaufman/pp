@@ -1,4 +1,5 @@
 import subprocess
+import re
 from functions import functions, spec
 
 ocaml_function_starts = {
@@ -37,7 +38,7 @@ back_to_expected_type = {
 filename_prefix = 'super_safe_filename'
 
 def cleanup():
-    print(subprocess.run(f'rm {filename_prefix}*', capture_output=True, shell=True))
+    subprocess.run(f'rm {filename_prefix}*', capture_output=True, shell=True)
 
 def evaluate_ocaml_code(code):
     with open(f'{filename_prefix}.ml', 'w') as file:
@@ -51,8 +52,13 @@ def evaluate_ocaml_code(code):
     else:
         raise Exception('Failed to build', result.stderr)
 
+def helper(x):
+    if not isinstance(x, list):
+        return x
+    return re.sub(r'\b(\w+)\b', r'\1;', str(x)).replace(',', '') 
+
 def change_list_delimiters(args):
-    return [str(arg).replace(',', ';') for arg in args]
+    return [helper(arg) for arg in args]
 
 def wrap_negatives_in_parens(args):
     return [f'({arg})' if isinstance(arg, float) or isinstance(arg, int) and arg < 0 else arg for arg in args]
@@ -65,7 +71,7 @@ def test_ocaml_exn(function, additional_code):
         args = wrap_negatives_in_parens(args)
         args = change_list_delimiters(args)
         expected = test_case[-1]
-        repr_args = ' '.join([str(arg) for arg in args])
+        repr_args = ' '.join([repr(arg) for arg in args]).replace("'", '"').replace('"[', '[').replace(']"', ']')
         try:
             value = evaluate_ocaml_code(f'{code};; {function} {repr_args}')
             cleanup()
