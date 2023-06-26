@@ -91,7 +91,6 @@ def test_ocaml_exn(function, additional_code):
     for test_case in test_cases:
         args = test_case[:-1]
         args = wrap_negatives_in_parens(args)
-        args = change_list_delimiters(args)
         expected = test_case[-1]
         repr_args = ' '.join([stringify(arg) for arg in args])
         try:
