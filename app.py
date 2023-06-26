@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS, cross_origin
 from settings import LOCAL, PASSWORD
-from functions import functions, test_exn, FunctionType
+from functions import functions, FunctionType
+from test_python import test_exn
+from test_ocaml import test_ocaml_exn, ocaml_function_starts
 from redis_utils import rget, rset 
 from secrets import compare_digest
 import random
@@ -18,6 +20,7 @@ CORS(app)
 def new_game():
     game_id = request.json.get('gameId')
     function_type = FunctionType(request.json.get('functionType') or 'easy')
+    ocaml = request.json.get('language') and request.json.get('language').lower() == 'ocaml'
     f = random.choice(list(functions[function_type].keys()))
     if game_id is None:
         return 'Must provide gameId', 400
@@ -25,6 +28,8 @@ def new_game():
     rset('function', f, game_id=game_id)
     rset('function_type', function_type.value, game_id=game_id)
     add_starting_characters(game_id)
+    if ocaml: 
+        return {'function': ocaml_function_starts[f]}
     return {'function': functions[function_type][f][0]}
 
 @app.route("/submit", methods=['POST'])
@@ -33,13 +38,17 @@ def end_game():
     if not compare_digest(request.json.get('password'), PASSWORD):
         return {'won': False, 'message': 'Incorrect password'}
     game_id = request.json.get('gameId')
+    ocaml = request.json.get('language') and request.json.get('language').lower() == 'ocaml'
     if game_id is None:
         return {'won': False, 'message': 'Must provide gameId'}
     rget('function', game_id=game_id)
     if rget('function', game_id=game_id) is None:
         return {'won': False, 'message': 'Game does not exist'}
     try:
-        test_exn(rget('function', game_id=game_id), rget('current', game_id=game_id))
+        if ocaml:
+            test_ocaml_exn(rget('function', game_id=game_id), rget('current', game_id=game_id))
+        else:
+            test_exn(rget('function', game_id=game_id), rget('current', game_id=game_id))
         return {'won': True}
     except Exception as e:
         return {'won': False, 'message': str(e)}
@@ -69,12 +78,17 @@ def add_character_inner(game_id, character):
 @cross_origin()
 def get_current():
     game_id = request.json.get('gameId')
+    ocaml = request.json.get('language') and request.json.get('language').lower() == 'ocaml'
     current = rget('current', game_id=game_id)
     function = rget('function', game_id=game_id)
     function_type = FunctionType(rget('function_type', game_id=game_id) or 'easy')
     if current is None:
         return {'exists': False}
-    return {'exists': True, 'current': current, 'function': functions[function_type][function][0]} 
+    if ocaml:
+        function = ocaml_function_starts[function]
+    else:
+        function = functions[function_type][function][0]
+    return {'exists': True, 'current': current, 'function': function}
 
 @app.route("/add", methods=['POST'])
 @cross_origin()

@@ -17,7 +17,7 @@ print_function = {
     'add_two': ' |> Int.to_string |> print_endline',
     'is_even': ' |> Bool.to_string |> print_endline',
     'most_common_element': ' |> Int.to_string |> print_endline',
-    'sum_list': ' |> Float.to_string |> print_endline',
+    'sum_list': ' |> Int.to_string |> print_endline',
     'is_palindrome': ' |> Bool.to_string |> print_endline',
     'is_prime': ' |> Bool.to_string |> print_endline',
     'is_anagram': ' |> Bool.to_string |> print_endline',
@@ -28,7 +28,7 @@ back_to_expected_type = {
     'add_two': lambda x : int(x),
     'is_even': lambda x : x == 'true',
     'most_common_element': lambda x : int(x),
-    'sum_list': lambda x : float(x),
+    'sum_list': lambda x : int(x),
     'is_palindrome': lambda x : x == 'true',
     'is_prime': lambda x : x == 'true',
     'is_anagram': lambda x : x == 'true',
@@ -51,14 +51,18 @@ def evaluate_ocaml_code(code):
     else:
         raise Exception('Failed to build', result.stderr)
 
+def change_list_delimiters(args):
+    return [str(arg).replace(',', ';') for arg in args]
+
 def wrap_negatives_in_parens(args):
-    return [f'({arg})' if arg < 0 else arg for arg in args]
+    return [f'({arg})' if isinstance(arg, float) or isinstance(arg, int) and arg < 0 else arg for arg in args]
 
 def test_ocaml_exn(function, additional_code):
     function_spec = spec(function)
     code = ocaml_function_starts[function] + additional_code + print_function[function]
     for test_case in function_spec[1]:
         args = test_case[:-1]
+        args = change_list_delimiters(args)
         args = wrap_negatives_in_parens(args)
         expected = test_case[-1]
         repr_args = ' '.join([str(arg) for arg in args])
@@ -70,4 +74,3 @@ def test_ocaml_exn(function, additional_code):
             raise Exception(f'Failed to evaluate f {repr_args} with error {e}')  
         if back_to_expected_type[function](value) != expected:
             raise Exception(f'Expected f {repr_args} = {expected} but got {value}')
-         

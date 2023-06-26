@@ -14,38 +14,46 @@ const functionType = document.getElementById('function-type');
 
 const allowMultipleCharacters = document.getElementById('allow-multiple-characters');
 
+const language = document.getElementById('language');
+
 allowMultipleCharacters.checked = !!localStorage.getItem('allowMultipleCharacters');
 
+let previousToast = null;
+
 function showToast(message, seconds = 3) {
-  const toast = document.createElement('div');
+    const toast = document.createElement('div');
 
-  toast.classList.add('toast');
-  toast.textContent = message;
+    toast.classList.add('toast');
+    toast.textContent = message;
 
-  document.body.appendChild(toast);
+    previousToast?.remove();
 
-  setTimeout(function() {
-    toast.remove();
-  }, seconds * 1000);
+    previousToast = toast;
+
+    document.body.appendChild(toast);
+
+    setTimeout(function () {
+        toast.remove();
+    }, seconds * 1000);
 }
 
 
 function hideCharacters(string) {
-  var result = '';
+    var result = '';
 
-  for (var i = 0; i < string.length; i++) {
-    if (string[i] === ' ' || string[i] === '\t' || string[i] === '\n') {
-      result += string[i]; 
-    } else {
-      result += '*'; 
+    for (var i = 0; i < string.length; i++) {
+        if (string[i] === ' ' || string[i] === '\t' || string[i] === '\n') {
+            result += string[i];
+        } else {
+            result += '*';
+        }
     }
-  }
 
-  if (result.length > 0) {
-    result = result.slice(0, -1) + string[string.length - 1];
-  }
+    if (result.length > 0) {
+        result = result.slice(0, -1) + string[string.length - 1];
+    }
 
-  return result;
+    return result;
 }
 
 function makeRequestOptions(body) {
@@ -68,12 +76,12 @@ function addCharacter() {
     const requestOptions = makeRequestOptions(JSON.stringify({ gameId, character: characterInput.value }));
 
     fetch(`${URL}/add`, requestOptions)
-    
+
     characterInput.value = '';
 }
 
 function submit() {
-    const requestOptions = makeRequestOptions(JSON.stringify({ gameId, password: passwordInput.value }));
+    const requestOptions = makeRequestOptions(JSON.stringify({ gameId, password: passwordInput.value, language: language.value }));
 
     fetch(`${URL}/submit`, requestOptions)
         .then(response => response.json())
@@ -89,17 +97,19 @@ function submit() {
 }
 
 function getCurrent() {
-    const requestOptions = makeRequestOptions(JSON.stringify({ gameId  }));
+    const requestOptions = makeRequestOptions(JSON.stringify({ gameId, language: language.value }));
 
     fetch(`${URL}/current`, requestOptions)
         .then(response => response.json())
         .then(data => {
             if (data['exists'] === false) {
                 current = ''
+            } else {
+                f = data['function'];
+                current = data['current'];
             }
-            current = data['current'];
         })
-    }
+}
 
 function loadGame() {
     won = false;
@@ -109,7 +119,7 @@ function loadGame() {
         return;
     }
 
-    const requestOptions = makeRequestOptions(JSON.stringify({ gameId }));
+    const requestOptions = makeRequestOptions(JSON.stringify({ gameId, language: language.value }));
 
     fetch(`${URL}/current`, requestOptions)
         .then(response => response.json())
@@ -132,7 +142,7 @@ function newGame() {
         return;
     }
 
-    const requestOptions = makeRequestOptions(JSON.stringify({ gameId , functionType: functionType.value }));
+    const requestOptions = makeRequestOptions(JSON.stringify({ gameId, functionType: functionType.value , language: language.value }));
 
     fetch(`${URL}/new_game`, requestOptions)
         .then(response => response.json())
@@ -169,6 +179,7 @@ function backspace() {
 }
 
 function setGameState() {
+    console.log(f);
     if (f === '') {
         gameState.innerHTML = '';
         return;
@@ -178,13 +189,14 @@ function setGameState() {
     } else {
         gameState.innerHTML = f + hideCharacters(current || '');
     }
+    // Coloring not live until I figure out when to uncolor
     if (won) {
-        gameState.style.color = 'green';
+        gameState.style.color = 'black';
     } else {
         gameState.style.color = 'black';
     }
     gameState.innerHTML += addPipe ? '|' : '';
-    addPipe = !addPipe; 
+    addPipe = !addPipe;
 }
 
 const gameState = document.getElementById('game-state');
@@ -241,7 +253,7 @@ passwordInput.addEventListener('keydown', async (e) => {
     if (e.key === 'Enter') {
         localStorage.setItem('pairProgrammingPassword', passwordInput.value);
     }
-    if (e.key === 'Escape') {  
+    if (e.key === 'Escape') {
         passwordInput.blur();
     }
 })
@@ -254,7 +266,7 @@ loadGameButton.addEventListener('click', async () => {
 const startOverButton = document.getElementById('start-over-btn');
 startOverButton.addEventListener('click', async () => {
     await clear();
-});    
+});
 
 const newLineButton = document.getElementById('new-line-btn');
 newLineButton.addEventListener('click', async () => {

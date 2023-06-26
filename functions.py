@@ -5,6 +5,7 @@ class FunctionType(Enum):
     MEDIUM = 'medium'
     HARD = 'hard'
 
+
 easy_functions = {
     'square': ('def square(x: float) -> float:', [(0, 0), (2, 4), (-3, 9)]), 
     'add_two': ('def add_two(x: float) -> float:', [(0, 2), (2, 4), (-3, -1)]),
@@ -13,7 +14,7 @@ easy_functions = {
 
 medium_functions = {
     'most_common_element': ('def most_common_element(x: list) -> int:', [([1, 2, 3], None), ([1, 1, 2, 3], 1), ([1, 2, 3, 3], 3)]),
-    'sum_list': ('def sum_list(x: list) -> float:', [([1, 2, 3], 6), ([1, 1, 2, 3], 7), ([1, 2, 3, 3], 9)]),
+    'sum_list': ('def sum_list(x: list) -> int:', [([1, 2, 3], 6), ([1, 1, 2, 3], 7), ([1, 2, 3, 3], 9)]),
 }
 
 hard_functions = {
@@ -28,23 +29,8 @@ functions = {
     FunctionType.HARD: hard_functions
 }
 
-def test_exn(function, additional_code):
-    spec = None
+def spec(function):
     for function_type in functions:
         if function in functions[function_type]:
-            spec = functions[function_type][function]
-            break
-    if spec is None:
-        raise Exception(f'Function {function} not found')
-    code = spec[0] + additional_code
-    exec(code)
-    for test_case in spec[1]:
-        args = test_case[:-1]
-        expected = test_case[-1]
-        repr_args = ', '.join([repr(arg) for arg in args])
-        try:
-            value = eval(f'{function}(*{args})')
-        except Exception as e:
-            raise Exception(f'Failed to evaluate f({repr_args}) with error {e}')
-        if value != expected:
-            raise Exception(f'Expected f({repr_args}) = {expected} but got {value}')
+            return functions[function_type][function]
+    raise Exception(f'Function {function} not found')
