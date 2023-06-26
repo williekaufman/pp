@@ -3,14 +3,25 @@ import re
 from functions import functions, spec
 
 ocaml_function_starts = {
-    'square': 'let square (x : int) : int =',
-    'add_two': 'let add_two (x : int) : int =',
+    'square': 'let square x =',
+    'add_two': 'let add_two x =',
     'is_even': 'let is_even x =',
     'most_common_element': 'let most_common_element x =',
     'sum_list': 'let sum_list x =',
     'is_palindrome': 'let is_palindrome x =',
     'is_prime': 'let is_prime x =',
     'is_anagram': 'let is_anagram x y =',
+}
+
+ocaml_function_starts_with_type_annotations = {
+    'square': 'let square (x : int) : int =',
+    'add_two': 'let add_two (x : int) : int =',
+    'is_even': 'let is_even (x : int) : bool =',
+    'most_common_element': 'let most_common_element (x : int list) : int option =',
+    'sum_list': 'let sum_list (x : int list) : int =',
+    'is_palindrome': 'let is_palindrome (x : string) : bool =',
+    'is_prime': 'let is_prime (x : int) : bool =',
+    'is_anagram': 'let is_anagram (x : string) (y : string) : bool =',
 }
 
 print_function = {

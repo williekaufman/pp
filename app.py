@@ -3,7 +3,7 @@ from flask_cors import CORS, cross_origin
 from settings import LOCAL, PASSWORD
 from functions import functions, FunctionType
 from test_python import test_exn
-from test_ocaml import test_ocaml_exn, ocaml_function_starts
+from test_ocaml import test_ocaml_exn, ocaml_function_starts_with_type_annotations
 from redis_utils import rget, rset 
 from secrets import compare_digest
 import random
@@ -33,7 +33,7 @@ def new_game():
     rset('function_type', function_type.value, game_id=game_id)
     add_starting_characters(game_id)
     if ocaml: 
-        return {'function': ocaml_function_starts[f]}
+        return {'function': ocaml_function_starts_with_type_annotations[f]}
     return {'function': functions[function_type][f][0]}
 
 @app.route("/submit", methods=['POST'])
@@ -89,7 +89,7 @@ def get_current():
     if current is None:
         return {'exists': False}
     if ocaml:
-        function = ocaml_function_starts[function]
+        function = ocaml_function_starts_with_type_annotations[function]
     else:
         function = functions[function_type][function][0]
     return {'exists': True, 'current': current, 'function': function}
