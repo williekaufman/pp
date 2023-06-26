@@ -22,6 +22,7 @@ let previousToast = null;
 
 let inInputField = false;
 
+
 function showToast(message, seconds = 3) {
     const toast = document.createElement('div');
 
@@ -65,6 +66,25 @@ function makeRequestOptions(body) {
         headers: { 'Content-Type': 'application/json' },
         body,
     };
+}
+
+function makeListOfFunctions() {
+    const requestOptions = makeRequestOptions();
+    
+    fetch(`${URL}/list_functions`, requestOptions)
+        .then(response => response.json())
+        .then(data => {
+            const selectElement = document.getElementById('specific-function')
+
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.value;
+                option.textContent = item.label;
+                selectElement.appendChild(option);
+            });
+
+            document.body.appendChild(selectElement);
+        })
 }
 
 function addCharacter() {
@@ -358,6 +378,8 @@ function handleKeyDown(e) {
 }
 
 document.addEventListener('keydown', handleKeyDown);
+
+makeListOfFunctions();
 
 setInterval(function () {
     getCurrent();

@@ -122,6 +122,11 @@ def delete_character():
     rset('current', current[:-1], game_id=game_id)
     return current[:-1]
 
+@app.route("/list_functions", methods=['POST'])
+@cross_origin()
+def list_functions():
+    return [x for y in functions.values() for x in y]
+
 if __name__ == '__main__':
     print('app running!')
     app.run(host='0.0.0.0', port=5001 if LOCAL else 5002)
