@@ -79,7 +79,7 @@ def change_list_delimiters(args):
 def wrap_negatives_in_parens(args):
     ret = []
     for arg in args:
-        if isinstance(arg, float) or isinstance(arg, int) and arg < 0:
+        if (isinstance(arg, float) or isinstance(arg, int)) and arg < 0:
             ret += ['(', arg, ')']
         else:
             ret += [arg]
@@ -88,7 +88,7 @@ def wrap_negatives_in_parens(args):
 def stringify(arg):
     if arg == '(' or arg == ')':
         return arg
-    if isinstance(arg, str) and arg[0] != '[':
+    if isinstance(arg, str) and (arg == '' or arg[0] != '['):
         return f'"{arg}"'
     return str(arg)
 
