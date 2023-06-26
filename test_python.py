@@ -15,4 +15,4 @@ def test_exn(function, additional_code):
         if value != expected:
             raise Exception(f'Expected f({repr_args}) = {expected} but got {value}')
         
-test_exn('is_anagram', '\n\t return x == y')
+test_exn('is_even', '\n\t return x % 2 == 0')
