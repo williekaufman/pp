@@ -9,6 +9,7 @@ ocaml_function_starts = {
     'most_common_element': 'let most_common_element x =',
     'sum_list': 'let sum_list x =',
     'reverse': 'let reverse x =',
+    'flatten_list': 'let flatten_list x =',
     'is_palindrome': 'let is_palindrome x =',
     'is_prime': 'let is_prime x =',
     'is_anagram': 'let is_anagram x y =',
@@ -21,6 +22,7 @@ ocaml_function_starts_with_type_annotations = {
     'most_common_element': 'let most_common_element (x : int list) : int option =',
     'sum_list': 'let sum_list (x : int list) : int =',
     'reverse': 'let reverse (x : string) : string =',
+    'flatten_list': 'let flatten_list (x : int list list) : int list =',
     'is_palindrome': 'let is_palindrome (x : string) : bool =',
     'is_prime': 'let is_prime (x : int) : bool =',
     'is_anagram': 'let is_anagram (x : string) (y : string) : bool =',
@@ -33,6 +35,7 @@ print_function = {
     'most_common_element': ' |> (fun x -> match x with | None -> "None" | Some x -> Int.to_string x) |> print_endline ',
     'sum_list': ' |> Int.to_string |> print_endline',
     'reverse': ' |> print_endline',
+    'flatten_list': ' |> List.map Int.to_string |> String.concat ";" |> fun x -> "[" ^ x ^ "]" |> print_endline',
     'is_palindrome': ' |> Bool.to_string |> print_endline',
     'is_prime': ' |> Bool.to_string |> print_endline',
     'is_anagram': ' |> Bool.to_string |> print_endline',
@@ -53,6 +56,7 @@ back_to_expected_type = {
 special_test_cases = {
     'sum_list': [('[1;2;3]', 6), ('[1;1;2;3]', 7), ('[1;2;3;3]', 9)],
     'most_common_element': [('[1;2;3]', 'None'), ('[1;1;2;3]', '1'), ('[1;2;3;3]', '3')],
+    'flatten_list': [('[[1;2];[3;4]]', '[1;2;3;4]'), ('[[1;2];[3;4];[5;6]]', '[1;2;3;4;5;6]'), ('[[1;2;3]]', '[1;2;3]')], 
 }
 
 filename_prefix = 'super_safe_filename'

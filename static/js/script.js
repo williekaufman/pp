@@ -165,6 +165,7 @@ function newGame() {
     makeRequestionOptionsArgs = { gameId, language: language.value };
 
     if (specificFunctions.value) {
+        console.log(specificFunctions.value)
         makeRequestionOptionsArgs['specificFunction'] = specificFunctions.value;
     }
 
