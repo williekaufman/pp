@@ -15,7 +15,7 @@ medium_functions = {
     'is_palindrome': ('def is_palindrome(x: str) -> bool:', [('racecar', True), ('hello', False), ('', True)]),
     'sum_list': ('def sum_list(x: list) -> int:', [([1, 2, 3], 6), ([1, 1, 2, 3], 7), ([1, 2, 3, 3], 9)]),
     'reverse': ('def reverse(x: str) -> str:', [('hello', 'olleh'), ('', ''), ('racecar', 'racecar')]),
-    'flatten_list': ('def flatten_list(x: list) -> list:', [([[1, 2], [3, 4]], [1, 2, 3, 4]), ([[1, 2], [3, 4], [5, 6]], [1, 2, 3, 4, 5, 6]), ([[ 1, 2, 3 ]], [1, 2, 3])]),
+    'flatten_list_of_lists': ('def flatten_list_of_lists(x: list) -> list:', [([[1, 2], [3, 4]], [1, 2, 3, 4]), ([[1, 2], [3, 4], [5, 6]], [1, 2, 3, 4, 5, 6]), ([[ 1, 2, 3 ]], [1, 2, 3])]),
 }
 
 hard_functions = {
