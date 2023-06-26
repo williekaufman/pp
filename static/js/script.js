@@ -325,7 +325,7 @@ function handleKeyDown(e) {
         e.preventDefault();
         characterInput.focus();
     }
-    if (e.ctrlKey) {
+    if (e.ctrlKey && !e.altKey) {
         if (e.key === 'Enter') {
             e.preventDefault();
             addWhitespace(false);
