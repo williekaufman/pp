@@ -1,0 +1,3 @@
+More functions/types
+Enforce turns/more well-defined multiplayer
+More languages?
