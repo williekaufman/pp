@@ -17,7 +17,7 @@ print_function = {
     'square': ' |> Int.to_string |> print_endline',
     'add_two': ' |> Int.to_string |> print_endline',
     'is_even': ' |> Bool.to_string |> print_endline',
-    'most_common_element': ' |> (fun x -> match x with | None -> print_endline "None" | (Some x -> Int.to_string x |> print_endline))',
+    'most_common_element': ' |> (fun x -> match x with | None -> "None" | Some x -> Int.to_string x) |> print_endline ',
     'sum_list': ' |> Int.to_string |> print_endline',
     'is_palindrome': ' |> Bool.to_string |> print_endline',
     'is_prime': ' |> Bool.to_string |> print_endline',
@@ -84,7 +84,7 @@ def stringify(arg):
 def test_ocaml_exn(function, additional_code):
     function_spec = spec(function)
     test_cases = special_test_cases[function] if function in special_test_cases else function_spec[1]
-    code = ocaml_function_starts[function] + additional_code + print_function[function]
+    code = ocaml_function_starts[function] + '(' + additional_code + ')' + print_function[function]
     for test_case in test_cases:
         args = test_case[:-1]
         args = wrap_negatives_in_parens(args)
