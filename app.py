@@ -24,8 +24,7 @@ def new_game():
     rset('current', '', game_id=game_id)
     rset('function', f, game_id=game_id)
     rset('function_type', function_type.value, game_id=game_id)
-    add_character_inner(game_id, '\n')
-    add_character_inner(game_id, '\t')
+    add_starting_characters(game_id)
     return {'function': functions[function_type][f][0]}
 
 @app.route("/submit", methods=['POST'])
@@ -52,7 +51,12 @@ def clear():
     if game_id is None:
         return 'Must provide gameId', 400
     rset('current', '', game_id=game_id)
+    add_starting_characters(game_id)
     return {'cleared': True}
+
+def add_starting_characters(game_id):
+    add_character_inner(game_id, '\n')
+    add_character_inner(game_id, '\t')
 
 def add_character_inner(game_id, character):
     current = rget('current', game_id=game_id) 

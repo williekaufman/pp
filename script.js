@@ -12,7 +12,7 @@ const displayCode = document.getElementById('display-code');
 
 const functionType = document.getElementById('function-type');
 
-function showToast(message) {
+function showToast(message, seconds = 3) {
   const toast = document.createElement('div');
 
   toast.classList.add('toast');
@@ -22,7 +22,7 @@ function showToast(message) {
 
   setTimeout(function() {
     toast.remove();
-  }, 3000);
+  }, seconds * 1000);
 }
 
 
@@ -95,6 +95,8 @@ function getCurrent() {
     }
 
 function loadGame() {
+    won = false;
+
     if (gameId === '') {
         showToast('enter a game id');
         return;
@@ -115,6 +117,8 @@ function loadGame() {
 }
 
 function newGame() {
+    won = false;
+
     if (gameId === '') {
         showToast('enter a game id');
         return;
@@ -134,6 +138,8 @@ function newGame() {
 function clear() {
     const requestOptions = makeRequestOptions(JSON.stringify({ gameId }));
     fetch(`${URL}/clear`, requestOptions)
+
+    won = false;
 
     showToast('cleared');
 }
