@@ -1,5 +1,5 @@
 __pycache__/
-local_settings.py
+settings.py
 *.deb
 config.js
 .idea/
