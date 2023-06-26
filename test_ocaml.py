@@ -61,7 +61,20 @@ def change_list_delimiters(args):
     return [helper(arg) for arg in args]
 
 def wrap_negatives_in_parens(args):
-    return [f'({arg})' if isinstance(arg, float) or isinstance(arg, int) and arg < 0 else arg for arg in args]
+    ret = []
+    for arg in args:
+        if isinstance(arg, float) or isinstance(arg, int) and arg < 0:
+            ret += ['(', arg, ')']
+        else:
+            ret += [arg]
+    return ret
+
+def stringify(arg):
+    if arg == '(' or arg == ')':
+        return arg
+    if isinstance(arg, str) and arg[0] != '[':
+        return f'"{arg}"'
+    return str(arg)
 
 def test_ocaml_exn(function, additional_code):
     function_spec = spec(function)
@@ -71,7 +84,7 @@ def test_ocaml_exn(function, additional_code):
         args = wrap_negatives_in_parens(args)
         args = change_list_delimiters(args)
         expected = test_case[-1]
-        repr_args = ' '.join([repr(arg) for arg in args]).replace("'", '"').replace('"[', '[').replace(']"', ']')
+        repr_args = ' '.join([stringify(arg) for arg in args])
         try:
             value = evaluate_ocaml_code(f'{code};; {function} {repr_args}')
             cleanup()
@@ -80,3 +93,8 @@ def test_ocaml_exn(function, additional_code):
             raise Exception(f'Failed to evaluate f {repr_args} with error {e}')  
         if back_to_expected_type[function](value) != expected:
             raise Exception(f'Expected f {repr_args} = {expected} but got {value}')
+
+# test_ocaml_exn('square', 'x * x')
+# test_ocaml_exn('add_two', 'x + 2')
+# test_ocaml_exn('sum_list', 'List.fold_left (+) 0 x')
+# test_ocaml_exn('is_palindrome', 'x = x')
