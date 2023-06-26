@@ -17,7 +17,7 @@ print_function = {
     'square': ' |> Int.to_string |> print_endline',
     'add_two': ' |> Int.to_string |> print_endline',
     'is_even': ' |> Bool.to_string |> print_endline',
-    'most_common_element': ' |> function | None -> print_endline "None" | Some x -> Int.to_string x |> print_endline',
+    'most_common_element': ' |> function | None -> print_endline "None" | (Some x -> Int.to_string x |> print_endline)',
     'sum_list': ' |> Int.to_string |> print_endline',
     'is_palindrome': ' |> Bool.to_string |> print_endline',
     'is_prime': ' |> Bool.to_string |> print_endline',
