@@ -180,7 +180,6 @@ function backspace() {
 }
 
 function setGameState() {
-    console.log(f);
     if (f === '') {
         gameState.innerHTML = '';
         return;

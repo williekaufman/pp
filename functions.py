@@ -13,12 +13,12 @@ easy_functions = {
 }
 
 medium_functions = {
-    'most_common_element': ('def most_common_element(x: list) -> int:', [([1, 2, 3], None), ([1, 1, 2, 3], 1), ([1, 2, 3, 3], 3)]),
+    'is_palindrome': ('def is_palindrome(x: str) -> bool:', [('racecar', True), ('hello', False), ('', True)]),
     'sum_list': ('def sum_list(x: list) -> int:', [([1, 2, 3], 6), ([1, 1, 2, 3], 7), ([1, 2, 3, 3], 9)]),
 }
 
 hard_functions = {
-    'is_palindrome': ('def is_palindrome(x: str) -> bool:', [('racecar', True), ('hello', False), ('', True)]),
+    'most_common_element': ('def most_common_element(x: list) -> int:', [([1, 2, 3], None), ([1, 1, 2, 3], 1), ([1, 2, 3, 3], 3)]),
     'is_prime': ('def is_prime(x: int) -> bool:', [(0, False), (1, False), (2, True), (3, True), (5, True), (10, False), (17, True), (123, False), (1171, True)]),
     'is_anagram': ('def is_anagram(x: str, y: str) -> bool:', [('racecar', 'carrace', True), ('hello', 'world', False), ('', '', True)]),
 }

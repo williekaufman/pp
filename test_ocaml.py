@@ -28,11 +28,16 @@ back_to_expected_type = {
     'square': lambda x : int(x),
     'add_two': lambda x : int(x),
     'is_even': lambda x : x == 'true',
-    'most_common_element': lambda x : int(x),
+    'most_common_element': lambda x : x,
     'sum_list': lambda x : int(x),
     'is_palindrome': lambda x : x == 'true',
     'is_prime': lambda x : x == 'true',
     'is_anagram': lambda x : x == 'true',
+}
+
+test_cases = {
+    'sum_list': [('[1;2;3]', 6), ('[1;1;2;3]', 7), ('[1;2;3;3]', 9)],
+    'most_common_element': [('[1;2;3]', 'None'), ('[1;1;2;3]', 'Some 1'), ('[1;2;3;3]', 'Some 3')],
 }
 
 filename_prefix = 'super_safe_filename'
@@ -78,8 +83,9 @@ def stringify(arg):
 
 def test_ocaml_exn(function, additional_code):
     function_spec = spec(function)
+    test_cases = test_cases[function] if function in test_cases else function_spec[1]
     code = ocaml_function_starts[function] + additional_code + print_function[function]
-    for test_case in function_spec[1]:
+    for test_case in test_cases:
         args = test_case[:-1]
         args = wrap_negatives_in_parens(args)
         args = change_list_delimiters(args)
