@@ -3,8 +3,8 @@ import re
 from functions import functions, spec
 
 ocaml_function_starts = {
-    'square': 'let square x =',
-    'add_two': 'let add_two x =',
+    'square': 'let square (x : int) : int =',
+    'add_two': 'let add_two (x : int) : int =',
     'is_even': 'let is_even x =',
     'most_common_element': 'let most_common_element x =',
     'sum_list': 'let sum_list x =',
