@@ -62,8 +62,8 @@ def test_ocaml_exn(function, additional_code):
     code = ocaml_function_starts[function] + additional_code + print_function[function]
     for test_case in function_spec[1]:
         args = test_case[:-1]
-        args = change_list_delimiters(args)
         args = wrap_negatives_in_parens(args)
+        args = change_list_delimiters(args)
         expected = test_case[-1]
         repr_args = ' '.join([str(arg) for arg in args])
         try:
