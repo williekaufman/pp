@@ -216,14 +216,6 @@ gameState.addEventListener('keydown', async (e) => {
         e.preventDefault();
         await backspace();
     }
-    if (e.key === 'Tab' && !e.shiftKey) {
-        e.preventDefault();
-        await addWhitespace(true);
-    }
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        await submit();
-    }
     if (e.key === 'Escape') {
         e.preventDefault();
         gameState.blur();
@@ -288,55 +280,82 @@ addCharacterButton.addEventListener('click', async () => {
     await addCharacter();
 });
 
-document.addEventListener('keydown', async (e) => {
-    if (e.altKey && !e.ctrlKey) {
+passwordInput.addEventListener('focus', () => {
+    document.removeEventListener('keydown', handleKeyDown);
+})
+
+passwordInput.addEventListener('blur', () => {
+    document.addEventListener('keydown', handleKeyDown);
+})
+
+gameIdInput.addEventListener('focus', () => {
+    document.removeEventListener('keydown', handleKeyDown);
+})
+
+gameIdInput.addEventListener('blur', () => {
+    document.addEventListener('keydown', handleKeyDown);
+})
+
+characterInput.addEventListener('focus', () => {
+    document.removeEventListener('keydown', handleKeyDown);
+})
+
+characterInput.addEventListener('blur', () => {
+    document.addEventListener('keydown', handleKeyDown);
+})
+
+function handleKeyDown(e) {
+    if (e.key === 's') {
+        e.preventDefault();
+        displayCode.checked = !displayCode.checked;
+    }
+    if (e.key === 'm') {
+        e.preventDefault();
+        allowMultipleCharacters.checked = !allowMultipleCharacters.checked;
+    }
+    if (e.key === 'p') {
+        e.preventDefault();
+        passwordInput.focus();
+    }
+    if (e.key === 'g') {
+        e.preventDefault();
+        gameIdInput.focus();
+    }
+    if (e.key === 'a') {
+        e.preventDefault();
+        characterInput.focus();
+    }
+    if (e.ctrlKey) {
         if (e.key === 'Enter') {
             e.preventDefault();
-            await submit();
+            addWhitespace(false);
         }
-        if (e.key === 'c') {
+        if (e.key === 'Tab') {
             e.preventDefault();
-            await clear();
+            addWhitespace(true);
+        }
+        if (e.key === 'Backspace') {
+            e.preventDefault();
+            backspace();
+        }
+    }
+    if (e.ctrlKey && e.altKey) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            submit();
         }
         if (e.key === 'n') {
             e.preventDefault();
-            await addWhitespace(false);
-        }
-        if (e.key === 't') {
-            e.preventDefault();
-            await addWhitespace(true);
-        }
-        if (e.key === 'd') {
-            e.preventDefault();
-            await backspace();
-        }
-        if (e.key === 's') {
-            displayCode.checked = !displayCode.checked;
-        }
-        if (e.key === 'm') {
-            allowMultipleCharacters.checked = !allowMultipleCharacters.checked;
-        }
-        if (e.key === 'p') {
-            passwordInput.focus();
-        }
-        if (e.key === 'g') {
-            gameIdInput.focus();
-        }
-        if (e.key === 'a') {
-            characterInput.focus();
-        }
-    }
-    if (e.altKey && e.ctrlKey) {
-        if (e.key === 'n') {
-            e.preventDefault();
-            await newGame();
+            newGame();
         }
         if (e.key === 'c') {
             e.preventDefault();
-            await clear();
-        }
+            clear();
+        }        
     }
-})
+}
+
+document.addEventListener('keydown', handleKeyDown);
 
 setInterval(function () {
     getCurrent();
