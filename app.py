@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, make_response, render_template
 from flask_cors import CORS, cross_origin
 from settings import LOCAL, PASSWORD
-from functions import functions, FunctionType
+from functions import functions, FunctionType, spec
 from test_python import test_exn
 from test_ocaml import test_ocaml_exn, ocaml_function_starts_with_type_annotations
 from redis_utils import rget, rset 
@@ -30,7 +30,6 @@ def new_game():
         return 'Must provide gameId', 400
     rset('current', '', game_id=game_id)
     rset('function', f, game_id=game_id)
-    rset('function_type', function_type.value, game_id=game_id)
     add_starting_characters(game_id)
     if ocaml: 
         return {'function': ocaml_function_starts_with_type_annotations[f]}
@@ -85,13 +84,12 @@ def get_current():
     ocaml = request.json.get('language') and request.json.get('language').lower() == 'ocaml'
     current = rget('current', game_id=game_id)
     function = rget('function', game_id=game_id)
-    function_type = FunctionType(rget('function_type', game_id=game_id) or 'easy')
     if current is None or function is None:
         return {'exists': False}
     if ocaml:
         function = ocaml_function_starts_with_type_annotations[function]
     else:
-        function = functions[function_type][function][0]
+        function = spec(function)[0]
     return {'exists': True, 'current': current, 'function': function}
 
 @app.route("/add", methods=['POST'])

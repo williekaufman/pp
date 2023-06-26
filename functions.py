@@ -5,7 +5,6 @@ class FunctionType(Enum):
     MEDIUM = 'medium'
     HARD = 'hard'
 
-
 easy_functions = {
     'square': ('def square(x: float) -> float:', [(0, 0), (2, 4), (-3, 9)]), 
     'add_two': ('def add_two(x: float) -> float:', [(0, 2), (2, 4), (-3, -1)]),
@@ -15,6 +14,7 @@ easy_functions = {
 medium_functions = {
     'is_palindrome': ('def is_palindrome(x: str) -> bool:', [('racecar', True), ('hello', False), ('', True)]),
     'sum_list': ('def sum_list(x: list) -> int:', [([1, 2, 3], 6), ([1, 1, 2, 3], 7), ([1, 2, 3, 3], 9)]),
+    'reverse': ('def reverse(x: str) -> str:', [('hello', 'olleh'), ('', ''), ('racecar', 'racecar')]),
 }
 
 hard_functions = {
