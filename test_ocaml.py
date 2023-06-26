@@ -106,7 +106,7 @@ def test_ocaml_exn(function, additional_code):
         if back_to_expected_type[function](value) != expected:
             raise Exception(f'Expected f {repr_args} = {expected} but got {value}')
 
-# test_ocaml_exn('square', 'x * x')
+test_ocaml_exn('square', 'x * x')
 # test_ocaml_exn('add_two', 'x + 2')
 # test_ocaml_exn('sum_list', 'List.fold_left (+) 0 x')
 # test_ocaml_exn('is_palindrome', 'x = x')

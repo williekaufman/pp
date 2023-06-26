@@ -14,3 +14,5 @@ def test_exn(function, additional_code):
             raise Exception(f'Failed to evaluate f({repr_args}) with error {e}')
         if value != expected:
             raise Exception(f'Expected f({repr_args}) = {expected} but got {value}')
+        
+test_exn('is_anagram', '\n\t return x == y')

@@ -24,7 +24,6 @@ let previousToast = null;
 
 let inInputField = false;
 
-
 function showToast(message, seconds = 3) {
     const toast = document.createElement('div');
 
@@ -165,7 +164,7 @@ function newGame() {
 
     makeRequestionOptionsArgs = { gameId, language: language.value };
 
-    if (specificFunctions.value !== '') {
+    if (specificFunctions.value) {
         makeRequestionOptionsArgs['specificFunction'] = specificFunctions.value;
     }
 
