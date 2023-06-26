@@ -16,6 +16,8 @@ const allowMultipleCharacters = document.getElementById('allow-multiple-characte
 
 const language = document.getElementById('language');
 
+const specificFunctions = document.getElementById('specific-function')
+
 allowMultipleCharacters.checked = !!localStorage.getItem('allowMultipleCharacters');
 
 let previousToast = null;
@@ -74,16 +76,12 @@ function makeListOfFunctions() {
     fetch(`${URL}/list_functions`, requestOptions)
         .then(response => response.json())
         .then(data => {
-            const selectElement = document.getElementById('specific-function')
-
             data.forEach(item => {
                 const option = document.createElement('option');
-                option.value = item.value;
-                option.textContent = item.label;
-                selectElement.appendChild(option);
+                option.value = item;
+                option.textContent = item;
+                specificFunctions.appendChild(option);
             });
-
-            document.body.appendChild(selectElement);
         })
 }
 
@@ -165,7 +163,13 @@ function newGame() {
         return;
     }
 
-    const requestOptions = makeRequestOptions(JSON.stringify({ gameId, functionType: functionType.value , language: language.value , specificFunction: 'square'}));
+    makeRequestionOptionsArgs = { gameId, language: language.value };
+
+    if (specificFunctions.value !== '') {
+        makeRequestionOptionsArgs['specificFunction'] = specificFunctions.value;
+    }
+
+    const requestOptions = makeRequestOptions(JSON.stringify(makeRequestionOptionsArgs));
 
     fetch(`${URL}/new_game`, requestOptions)
         .then(response => response.json())
@@ -385,3 +389,4 @@ setInterval(function () {
     getCurrent();
     setGameState();
 }, 500)
+
