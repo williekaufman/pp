@@ -129,4 +129,4 @@ def list_functions():
 
 if __name__ == '__main__':
     print('app running!')
-    app.run(host='0.0.0.0', port=5001 if LOCAL else 5002)
+    app.run(host='0.0.0.0', port=5001 if LOCAL else 5003)
